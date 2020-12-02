@@ -1,6 +1,6 @@
 using System;
 using Xunit;
-using Day1;
+using AdventOfCode.Day1;
 
 
 namespace tests
