@@ -1,6 +1,7 @@
 ﻿using System;
+using AdventOfCode.Common;
 
-namespace Day1
+namespace AdventOfCode.Day1
 {
     class Program
     {
@@ -51,6 +52,5 @@ namespace Day1
             totalTime = watch.ElapsedMilliseconds;
             Console.WriteLine($"Total execution time: {totalTime} ms");
         }
-
     }
 }

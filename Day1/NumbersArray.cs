@@ -1,4 +1,4 @@
-namespace Day1
+namespace AdventOfCode.Day1
 {
     public class NumbersArray
     {

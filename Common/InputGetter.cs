@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace Day1
+namespace AdventOfCode.Common
 {
     public class InputGetter
     {
@@ -23,6 +23,11 @@ namespace Day1
             string[] values = File.ReadAllLines(Filename);
             int[] ints = Array.ConvertAll(values, s => int.Parse(s));
             return ints;
+        }
+
+        public string[] GetStringsFromInput()
+        {
+            return File.ReadAllLines(Filename);
         }
     }
 }
