@@ -25,7 +25,7 @@ namespace AdventOfCode.Day3
             watch.Start();
             List<string> map = new List<string>(pattern);
             Vector speed = new Vector(3, 1);
-            Trip trip = new Trip(pattern, map);
+            Trip trip = new Trip(map);
             int totalTrees = trip.GetNumberOfTreesWithSpeed(speed);
             watch.Stop();
             timeToSolvePart1 = watch.ElapsedMilliseconds - timeToLoadInput;
@@ -34,7 +34,6 @@ namespace AdventOfCode.Day3
             Console.WriteLine($"Solved in {timeToSolvePart1} ms");
 
             watch.Start();
-            map = new List<string>(pattern);
             List<Vector> speeds = new List<Vector> {
                 new Vector(1, 1),
                 new Vector(3, 1),

@@ -28,7 +28,7 @@ namespace tests
                 )
                 .Select(s => s.Trim()).ToArray();
             List<string> map = new List<string>(pattern);
-            Trip trip = new Trip(pattern, map);
+            Trip trip = new Trip(map);
 
             int totalTrees = trip.GetNumberOfTreesWithSpeed(new Vector(3, 1));
 
@@ -54,7 +54,7 @@ namespace tests
                 )
                 .Select(s => s.Trim()).ToArray();
             List<string> map = new List<string>(pattern);
-            Trip trip = new Trip(pattern, map);
+            Trip trip = new Trip(map);
 
             List<Vector> speeds = new List<Vector> {
                 new Vector(1, 1),

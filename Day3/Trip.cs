@@ -5,13 +5,11 @@ namespace AdventOfCode.Day3
 {
     public class Trip
     {
-        public string[] Pattern { get; private set; }
         public List<string> Map { get; private set; }
         public Vector Speed { get; private set; }
 
-        public Trip(string[] pattern, List<string> map)
+        public Trip(List<string> map)
         {
-            Pattern = pattern;
             Map = map;
         }
 
@@ -23,8 +21,9 @@ namespace AdventOfCode.Day3
             while (currentPosition.Y < Map.Count)
             {
                 if (currentPosition.X >= Map[currentPosition.Y].Length)
-                    while (Map[currentPosition.Y].Length <= currentPosition.X)
-                        Map[currentPosition.Y] += Pattern[currentPosition.Y];
+                    currentPosition = new Point(
+                        currentPosition.X - Map[currentPosition.Y].Length,
+                        currentPosition.Y);
 
                 if (Map[currentPosition.Y][currentPosition.X] == '#')
                     totalTrees++;
