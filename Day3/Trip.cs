@@ -6,7 +6,6 @@ namespace AdventOfCode.Day3
     public class Trip
     {
         public List<string> Map { get; private set; }
-        public Vector Speed { get; private set; }
 
         public Trip(List<string> map)
         {
@@ -15,17 +14,16 @@ namespace AdventOfCode.Day3
 
         public int GetNumberOfTreesWithSpeed(Vector speed)
         {
-            Speed = speed;
             int totalTrees = 0;
             Point currentPosition = new Point(0, 0);
             while (currentPosition.Y < Map.Count)
             {
-                if (currentPosition.X >= Map[currentPosition.Y].Length)
+                if (IsPositionOffEdgeOfMap(currentPosition))
                     currentPosition = new Point(
                         currentPosition.X - Map[currentPosition.Y].Length,
                         currentPosition.Y);
 
-                if (Map[currentPosition.Y][currentPosition.X] == '#')
+                if (IsPositionOnTree(currentPosition))
                     totalTrees++;
 
                 currentPosition = currentPosition + speed;
@@ -33,5 +31,11 @@ namespace AdventOfCode.Day3
 
             return totalTrees;
         }
+
+        private bool IsPositionOffEdgeOfMap(Point pos)
+            => pos.X >= Map[pos.Y].Length;
+
+        private bool IsPositionOnTree(Point pos)
+            => Map[pos.Y][pos.X] == '#';
     }
 }
