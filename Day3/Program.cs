@@ -19,30 +19,43 @@ namespace AdventOfCode.Day3
             string[] pattern = inputter.GetStringsFromInput();
             watch.Stop();
             timeToLoadInput = watch.ElapsedMilliseconds;
+
             Console.WriteLine($"Input loaded in {timeToLoadInput} ms");
 
             watch.Start();
             List<string> map = new List<string>(pattern);
-            Point currentPosition = new Point(0, 0);
             Vector speed = new Vector(3, 1);
-            int totalTrees = 0;
-            while (currentPosition.Y < map.Count)
-            {
-                if (currentPosition.X >= map[currentPosition.Y].Length)
-                    while (map[currentPosition.Y].Length <= currentPosition.X)
-                        map[currentPosition.Y] += pattern[currentPosition.Y];
-
-                if (map[currentPosition.Y][currentPosition.X] == '#')
-                    totalTrees++;
-
-                currentPosition = currentPosition + speed;
-            }
+            Trip trip = new Trip(pattern, map);
+            int totalTrees = trip.GetNumberOfTreesWithSpeed(speed);
             watch.Stop();
             timeToSolvePart1 = watch.ElapsedMilliseconds - timeToLoadInput;
 
             Console.WriteLine($"The number of trees on the path is: {totalTrees}");
             Console.WriteLine($"Solved in {timeToSolvePart1} ms");
 
+            watch.Start();
+            map = new List<string>(pattern);
+            List<Vector> speeds = new List<Vector> {
+                new Vector(1, 1),
+                new Vector(3, 1),
+                new Vector(5, 1),
+                new Vector(7, 1),
+                new Vector(1, 2)
+                };
+            long totalProduct = 1;
+            foreach (Vector currentSpeed in speeds)
+            {
+                totalTrees = trip.GetNumberOfTreesWithSpeed(currentSpeed);
+                totalProduct *= totalTrees;
+            }
+            watch.Stop();
+            timeToSolvePart2 = watch.ElapsedMilliseconds - timeToSolvePart1 - timeToLoadInput;
+
+            Console.WriteLine($"The product of trees in each path: {totalProduct}");
+            Console.WriteLine($"Solved in {timeToSolvePart2} ms");
+
+            totalTime = watch.ElapsedMilliseconds;
+            Console.WriteLine($"Total execution time: {totalTime} ms");
         }
     }
 }
