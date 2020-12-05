@@ -12,7 +12,8 @@ namespace tests
         [Fact]
         public void FindNumTrees_WithDefaultInput_ShouldReturn7()
         {
-            string testInput = @"..##.......
+            string testInput = @"
+                ..##.......
                 #...#...#..
                 .#....#..#.
                 ..#.#...#.#
@@ -24,7 +25,10 @@ namespace tests
                 #...##....#
                 .#..#...#.#";
             string[] pattern = new List<string>(
-                    testInput.Split(Environment.NewLine)
+                    testInput.Split(
+                        Environment.NewLine,
+                        StringSplitOptions.RemoveEmptyEntries
+                        )
                 )
                 .Select(s => s.Trim()).ToArray();
             List<string> map = new List<string>(pattern);
@@ -38,7 +42,8 @@ namespace tests
         [Fact]
         public void FindProductOfTrips_WithDefaultInput_ShouldReturn336()
         {
-            string testInput = @"..##.......
+            string testInput = @"
+                ..##.......
                 #...#...#..
                 .#....#..#.
                 ..#.#...#.#
@@ -50,7 +55,10 @@ namespace tests
                 #...##....#
                 .#..#...#.#";
             string[] pattern = new List<string>(
-                    testInput.Split(Environment.NewLine)
+                    testInput.Split(
+                        Environment.NewLine,
+                        StringSplitOptions.RemoveEmptyEntries
+                        )
                 )
                 .Select(s => s.Trim()).ToArray();
             List<string> map = new List<string>(pattern);
