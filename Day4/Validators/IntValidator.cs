@@ -23,7 +23,7 @@ namespace AdventOfCode.Day4.Validators
                 intValue = int.Parse(Value);
                 isValid = true;
             }
-            catch (Exception ex)
+            catch
             {
                 isValid = false;
             }
