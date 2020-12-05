@@ -9,7 +9,7 @@ using AdventOfCode.Day4.Validators;
 
 namespace tests
 {
-    public class Day4Tests
+    public class Day04Tests
     {
         [Fact]
         public void FindValidPassports_WithDefaultInput_ShouldReturn2()

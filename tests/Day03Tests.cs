@@ -7,7 +7,7 @@ using AdventOfCode.Day3;
 
 namespace tests
 {
-    public class Day3Tests
+    public class Day03Tests
     {
         [Fact]
         public void FindNumTrees_WithDefaultInput_ShouldReturn7()

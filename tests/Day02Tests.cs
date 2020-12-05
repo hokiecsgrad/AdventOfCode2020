@@ -5,7 +5,7 @@ using AdventOfCode.Day2;
 
 namespace tests
 {
-    public class Day2Tests
+    public class Day02Tests
     {
         [Fact]
         public void CountValidPasswords_WithDefaultInput_ShouldReturn2()

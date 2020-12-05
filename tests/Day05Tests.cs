@@ -3,7 +3,7 @@ using AdventOfCode.Day5;
 
 namespace tests
 {
-    public class Day5Tests
+    public class Day05Tests
     {
         [Theory]
         [InlineData("BFFFBBFRRR", 70, 7, 567)]

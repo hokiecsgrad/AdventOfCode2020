@@ -5,12 +5,12 @@ using AdventOfCode.Day1;
 
 namespace tests
 {
-    public class Day1Tests
+    public class Day01Tests
     {
         [Fact]
         public void FindTwoNums_WithDefaultInput_ShouldReturn1721And299()
         {
-            int[] testInput = new int[] {1721, 979, 366, 299, 675, 1456};
+            int[] testInput = new int[] { 1721, 979, 366, 299, 675, 1456 };
             NumbersArray numbers = new NumbersArray(testInput);
 
             int num1 = 0;
@@ -24,7 +24,7 @@ namespace tests
         [Fact]
         public void FindThreeNums_WithDefaultInput_ShouldReturn979And366And675()
         {
-            int[] testInput = new int[] {1721, 979, 366, 299, 675, 1456};
+            int[] testInput = new int[] { 1721, 979, 366, 299, 675, 1456 };
             NumbersArray numbers = new NumbersArray(testInput);
 
             int num1 = 0;
