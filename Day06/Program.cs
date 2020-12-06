@@ -7,40 +7,25 @@ namespace AdventOfCode.Day6
     {
         static void Main(string[] args)
         {
-            var watch = new System.Diagnostics.Stopwatch();
-            long totalTime = 0;
-            long timeToLoadInput = 0;
-            long timeToSolvePart1 = 0;
-            long timeToSolvePart2 = 0;
+            InputGetter input = new InputGetter("input.txt");
 
-            watch.Start();
-            InputGetter inputter = new InputGetter("input.txt");
-            string[] customsData = inputter.GetStringsFromInput();
-            watch.Stop();
-            timeToLoadInput = watch.ElapsedMilliseconds;
+            ProgramFramework framework = new ProgramFramework();
+            framework.InputHandler = input.GetStringsFromInput;
+            framework.Part1Handler = Part1;
+            framework.Part2Handler = Part2;
+            framework.RunProgram();
+        }
 
-            Console.WriteLine($"Input loaded in {timeToLoadInput} ms");
+        public static void Part1(string[] data)
+        {
+            int total = ProcessInputData(data, "all");
+            Console.WriteLine($"The sum where anyone in group answered questions is: {total}");
+        }
 
-            // Process Part 1
-            watch.Start();
-            int sumOfCustomsAnswers = ProcessInputData(customsData, "all");
-            watch.Stop();
-            timeToSolvePart1 = watch.ElapsedMilliseconds - timeToLoadInput;
-
-            Console.WriteLine($"The sum where anyone in group answered questions is: {sumOfCustomsAnswers}");
-            Console.WriteLine($"Solved in {timeToSolvePart1} ms");
-
-            // Process Part 2
-            watch.Start();
-            sumOfCustomsAnswers = ProcessInputData(customsData, "unique");
-            watch.Stop();
-            timeToSolvePart2 = watch.ElapsedMilliseconds - timeToSolvePart1 - timeToLoadInput;
-
-            Console.WriteLine($"The sum where everyone in group answered questions is: {sumOfCustomsAnswers}");
-            Console.WriteLine($"Solved in {timeToSolvePart2} ms");
-
-            totalTime = watch.ElapsedMilliseconds;
-            Console.WriteLine($"Total execution time: {totalTime} ms");
+        public static void Part2(string[] data)
+        {
+            int total = ProcessInputData(data, "unique");
+            Console.WriteLine($"The sum where everyone in group answered questions is: {total}");
         }
 
         private static int ProcessInputData(string[] customsData, string validatorFunction)

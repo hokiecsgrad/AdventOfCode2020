@@ -7,40 +7,25 @@ namespace AdventOfCode.Day4
     {
         static void Main(string[] args)
         {
-            var watch = new System.Diagnostics.Stopwatch();
-            long totalTime = 0;
-            long timeToLoadInput = 0;
-            long timeToSolvePart1 = 0;
-            long timeToSolvePart2 = 0;
+            InputGetter input = new InputGetter("input.txt");
 
-            watch.Start();
-            InputGetter inputter = new InputGetter("input.txt");
-            string[] passportsData = inputter.GetStringsFromInput();
-            watch.Stop();
-            timeToLoadInput = watch.ElapsedMilliseconds;
+            ProgramFramework framework = new ProgramFramework();
+            framework.InputHandler = input.GetStringsFromInput;
+            framework.Part1Handler = Part1;
+            framework.Part2Handler = Part2;
+            framework.RunProgram();
+        }
 
-            Console.WriteLine($"Input loaded in {timeToLoadInput} ms");
+        public static void Part1(string[] data)
+        {
+            int total = ProcessInputData(data, "required");
+            Console.WriteLine($"The number of valid passports with all required data is: {total}");
+        }
 
-            // Process Part 1
-            watch.Start();
-            int validPassports = ProcessInputData(passportsData, "required");
-            watch.Stop();
-            timeToSolvePart1 = watch.ElapsedMilliseconds - timeToLoadInput;
-
-            Console.WriteLine($"The number of valid passports is: {validPassports}");
-            Console.WriteLine($"Solved in {timeToSolvePart1} ms");
-
-            // Process Part 2
-            watch.Start();
-            validPassports = ProcessInputData(passportsData, "valid");
-            watch.Stop();
-            timeToSolvePart2 = watch.ElapsedMilliseconds - timeToSolvePart1 - timeToLoadInput;
-
-            Console.WriteLine($"The number of valid passports is: {validPassports}");
-            Console.WriteLine($"Solved in {timeToSolvePart2} ms");
-
-            totalTime = watch.ElapsedMilliseconds;
-            Console.WriteLine($"Total execution time: {totalTime} ms");
+        public static void Part2(string[] data)
+        {
+            int total = ProcessInputData(data, "valid");
+            Console.WriteLine($"The number of valid passports is: {total}");
         }
 
         private static int ProcessInputData(string[] passportsData, string validatorFunction)

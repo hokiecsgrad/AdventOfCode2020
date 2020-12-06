@@ -7,34 +7,32 @@ namespace AdventOfCode.Day5
 {
     class Program
     {
+        public static int[] seats;
+        public static int minSeatId;
+        public static int maxSeatId;
+
         static void Main(string[] args)
         {
-            var watch = new System.Diagnostics.Stopwatch();
-            long totalTime = 0;
-            long timeToLoadInput = 0;
-            long timeToSolvePart1 = 0;
-            long timeToSolvePart2 = 0;
+            InputGetter input = new InputGetter("input.txt");
 
-            watch.Start();
-            InputGetter inputter = new InputGetter("input.txt");
-            string[] boardingPasses = inputter.GetStringsFromInput();
-            watch.Stop();
-            timeToLoadInput = watch.ElapsedMilliseconds;
+            ProgramFramework framework = new ProgramFramework();
+            framework.InputHandler = input.GetStringsFromInput;
+            framework.Part1Handler = Part1;
+            framework.Part2Handler = Part2;
+            framework.RunProgram();
+        }
 
-            Console.WriteLine($"Input loaded in {timeToLoadInput} ms");
-
-            // Process Part 1
-            watch.Start();
-
+        public static void Part1(string[] data)
+        {
             BoardingPassParser maxSeatCalc = new BoardingPassParser("BBBBBBBRRR");
             int maxPossibleSeatId = maxSeatCalc.GetId();
-            int[] seats = new int[maxPossibleSeatId];
+            seats = new int[maxPossibleSeatId];
 
-            int maxSeatId = 0;
-            int minSeatId = maxPossibleSeatId;
-            for (int i = 0; i < boardingPasses.Length; i++)
+            maxSeatId = 0;
+            minSeatId = maxPossibleSeatId;
+            for (int i = 0; i < data.Length; i++)
             {
-                BoardingPassParser seatCalc = new BoardingPassParser(boardingPasses[i]);
+                BoardingPassParser seatCalc = new BoardingPassParser(data[i]);
                 int row = seatCalc.GetRow();
                 int col = seatCalc.GetCol();
                 int id = seatCalc.GetId();
@@ -42,26 +40,18 @@ namespace AdventOfCode.Day5
                 if (id > maxSeatId) maxSeatId = id;
                 if (id < minSeatId) minSeatId = id;
             }
-            watch.Stop();
-            timeToSolvePart1 = watch.ElapsedMilliseconds - timeToLoadInput;
-
             Console.WriteLine($"The max seat id is: {maxSeatId}");
-            Console.WriteLine($"Solved in {timeToSolvePart1} ms");
+        }
 
-            // Process Part 2
-            watch.Start();
+        public static void Part2(string[] data)
+        {
             int mySeatId = 0;
+
             for (int i = minSeatId; i < maxSeatId; i++)
                 if (seats[i] == 0)
                     mySeatId = i;
-            watch.Stop();
-            timeToSolvePart2 = watch.ElapsedMilliseconds - timeToSolvePart1 - timeToLoadInput;
 
             Console.WriteLine($"My seat id is: {mySeatId}");
-            Console.WriteLine($"Solved in {timeToSolvePart2} ms");
-
-            totalTime = watch.ElapsedMilliseconds;
-            Console.WriteLine($"Total execution time: {totalTime} ms");
         }
     }
 }

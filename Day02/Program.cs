@@ -7,55 +7,45 @@ namespace AdventOfCode.Day2
     {
         static void Main(string[] args)
         {
-            var watch = new System.Diagnostics.Stopwatch();
-            long totalTime = 0;
-            long timeToLoadInput = 0;
-            long timeToSolvePart1 = 0;
-            long timeToSolvePart2 = 0;
-            
-            watch.Start();
-            InputGetter inputter = new InputGetter("input.txt");
-            string[] input = inputter.GetStringsFromInput();
-            watch.Stop();
-            timeToLoadInput = watch.ElapsedMilliseconds;
-            Console.WriteLine($"Input loaded in {timeToLoadInput} ms");
+            InputGetter input = new InputGetter("input.txt");
 
-            watch.Start();
+            ProgramFramework framework = new ProgramFramework();
+            framework.InputHandler = input.GetStringsFromInput;
+            framework.Part1Handler = Part1;
+            framework.Part2Handler = Part2;
+            framework.RunProgram();
+        }
+
+        public static void Part1(string[] data)
+        {
+            int total = ProcessData(data, "part1");
+            Console.WriteLine($"The number of passwords that are valid: {total}");
+        }
+
+        public static void Part2(string[] data)
+        {
+            int total = ProcessData(data, "part2");
+            Console.WriteLine($"The number of passwords that are valid: {total}");
+        }
+
+        private static int ProcessData(string[] data, string validatorFunction)
+        {
             int total = 0;
-            for (int i = 0; i < input.Length; i++)
+            for (int i = 0; i < data.Length; i++)
             {
-                string raw = input[i];
+                string raw = data[i];
                 RuleParser ruleParser = new RuleParser();
                 ruleParser.ParseRules(raw.Substring(0, raw.IndexOf(':')));
-                PasswordValidator passValidator = new PasswordValidator(ruleParser, raw.Substring(raw.IndexOf(':')));
-                if (passValidator.IsPart1Valid())
+                PasswordValidator passValidator = new PasswordValidator(
+                                                        ruleParser,
+                                                        raw.Substring(raw.IndexOf(':'))
+                                                        );
+                if (validatorFunction == "part1" && passValidator.IsPart1Valid())
+                    total += 1;
+                else if (validatorFunction == "part2" && passValidator.IsPart2Valid())
                     total += 1;
             }
-            watch.Stop();
-            timeToSolvePart1 = watch.ElapsedMilliseconds - timeToLoadInput;
-
-            Console.WriteLine($"The number of passwords that are valid: {total}");
-            Console.WriteLine($"Solved in {timeToSolvePart1} ms");
-
-            watch.Start();
-            total = 0;
-            for (int i = 0; i < input.Length; i++)
-            {
-                string raw = input[i];
-                RuleParser ruleParser = new RuleParser();
-                ruleParser.ParseRules(raw.Substring(0, raw.IndexOf(':')));
-                PasswordValidator passValidator = new PasswordValidator(ruleParser, raw.Substring(raw.IndexOf(':')));
-                if (passValidator.IsPart2Valid())
-                    total += 1;
-            }
-            watch.Stop();
-            timeToSolvePart2 = watch.ElapsedMilliseconds - timeToSolvePart1 - timeToLoadInput;
-
-            Console.WriteLine($"The number of passwords that are valid: {total}");
-            Console.WriteLine($"Solved in {timeToSolvePart2} ms");
-
-            totalTime = watch.ElapsedMilliseconds;
-            Console.WriteLine($"Total execution time: {totalTime} ms");
+            return total;
         }
     }
 }
