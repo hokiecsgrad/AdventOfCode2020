@@ -34,7 +34,9 @@ namespace AdventOfCode.Day8
                         programPosition++;
                         break;
                 }
-                if (hasBeenVisited[programPosition])
+                if (programPosition >= Program.Length)
+                    break;
+                else if (hasBeenVisited[programPosition])
                 {
                     IsInfiniteLoop = true;
                     break;
