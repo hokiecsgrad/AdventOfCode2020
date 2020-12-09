@@ -18,6 +18,10 @@ namespace AdventOfCode.Day8
 
         public static void Part1(string[] data)
         {
+            Computer computer = new Computer(data);
+            computer.Run();
+
+            Console.WriteLine($"The value of the accumulator is: {computer.Accumulator}.");
         }
 
         public static void Part2(string[] data)
