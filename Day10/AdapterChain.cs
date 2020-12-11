@@ -7,7 +7,7 @@ namespace AdventOfCode.Day10
     public class AdapterChain
     {
         public List<int> Adapters { get; private set; } = new List<int>();
-        public Graph Graph { get; private set; } = new Graph();
+        public Graph<int> Graph { get; private set; } = new Graph<int>();
 
         public AdapterChain(List<int> adapters)
         {
@@ -39,17 +39,17 @@ namespace AdventOfCode.Day10
             return (countOf1Diffs, countOf3Diffs);
         }
 
-        public int CountCombinations()
+        public long CountCombinations()
         {
             Adapters.Sort();
             Graph = BuildGraph();
-            int paths = Graph.GetNumPaths();
+            long paths = Graph.GetNumPaths();
             return paths;
         }
 
-        private Graph BuildGraph()
+        private Graph<int> BuildGraph()
         {
-            Graph graph = new Graph();
+            Graph<int> graph = new Graph<int>();
             graph.AddNodes(Adapters);
             for (int i = 0; i < graph.Nodes.Count; i++)
             {

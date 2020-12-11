@@ -4,38 +4,42 @@ using System.Linq;
 
 namespace AdventOfCode.Day10
 {
-    public class Graph
+    public class Graph<T>
     {
-        public List<Node<int>> Nodes { get; private set; } = new List<Node<int>>();
-        public List<Node<int>> Sorted { get; private set; } = new List<Node<int>>();
+        public List<Node<T>> Nodes { get; private set; } = new List<Node<T>>();
+        public List<Node<T>> Sorted { get; private set; } = new List<Node<T>>();
 
-        public void AddNodes(List<int> nodeValues)
+        public void AddNodes(List<T> nodeValues)
         {
-            foreach (int value in nodeValues)
-                AddNode(new Node<int>(value));
+            foreach (T value in nodeValues)
+                AddNode(new Node<T>(value));
         }
 
-        public void AddNode(Node<int> node)
+        public void AddNode(Node<T> node)
         {
             Nodes.Add(node);
         }
 
-        public void AddEdge(Node<int> from, Node<int> to)
+        public void AddEdge(Node<T> from, Node<T> to)
         {
             from.AddEdge(to);
         }
 
-        public int GetNumPaths()
+        public long GetNumPaths()
         {
             TopologicalSort();
             Sorted[0].NumPaths = 1;
+
             for (int i = 1; i < Sorted.Count; i++)
-            {
-                Sorted[i].NumPaths = Sorted[i].NumPaths + (Sorted[i].Edges.Count * Sorted[i - 1].NumPaths);
-            }
+                Sorted[i].NumPaths = Sorted[i].Edges.Sum(e => e.NumPaths);
+
             return Sorted[Sorted.Count - 1].NumPaths;
         }
 
+        // With the help of 
+        // Data Structures and Algorithm Analysis by Dr. Clifford A Shaffer
+        // Chapter 7: Graphs, Page 203 (Topological Sort), Section 7.3.3
+        // I apologize for all the terrible things I said about your class in 1997.
         public void TopologicalSort()
         {
             for (int i = 0; i < Nodes.Count; i++)
@@ -43,37 +47,18 @@ namespace AdventOfCode.Day10
 
             for (int i = 0; i < Nodes.Count; i++)
                 if (!Nodes[i].HasVisited)
-                    TopSort(Nodes[i]);
+                    TopSortHelper(Nodes[i]);
         }
 
-        private void TopSort(Node<int> node)
+        private void TopSortHelper(Node<T> node)
         {
             node.HasVisited = true;
             for (int i = 0; i < node.Edges.Count; i++)
             {
                 if (!node.Edges[i].HasVisited)
-                    TopSort(node.Edges[i]);
+                    TopSortHelper(node.Edges[i]);
             }
             Sorted.Add(node);
-        }
-
-        private int CountPathsUtil(Node<int> source, Node<int> dest, int pathCount)
-        {
-            if (source == dest)
-                pathCount++;
-            else
-                foreach (Node<int> edge in source.Edges)
-                    pathCount = CountPathsUtil(edge, dest, pathCount);
-
-            return pathCount;
-        }
-
-        public Node<int> GetNodeByValue(int value)
-        {
-            foreach (Node<int> node in Nodes)
-                if (node.Value == value)
-                    return node;
-            return null;
         }
     }
 }

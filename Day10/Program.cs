@@ -39,7 +39,7 @@ namespace AdventOfCode.Day10
             joltageData.Add(joltageData.Max() + 3);
 
             AdapterChain adapters = new AdapterChain(joltageData);
-            int total = adapters.CountCombinations();
+            long total = adapters.CountCombinations();
 
             Console.WriteLine($"The number of combinations available is: {total}.");
         }

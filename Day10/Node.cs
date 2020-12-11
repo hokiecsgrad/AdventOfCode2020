@@ -8,7 +8,7 @@ namespace AdventOfCode.Day10
         public T Value { get; set; }
         public List<Node<T>> Edges { get; set; } = new List<Node<T>>();
         public bool HasVisited { get; set; } = false;
-        public int NumPaths { get; set; } = 0;
+        public long NumPaths { get; set; } = 0;
 
         public Node(T value)
         {

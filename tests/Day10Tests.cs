@@ -119,20 +119,72 @@ namespace tests
             joltageData.Add(joltageData.Max() + 3);
 
             AdapterChain adapters = new AdapterChain(joltageData);
-            int total = adapters.CountCombinations();
+            long total = adapters.CountCombinations();
 
             Assert.Equal(8, total);
+        }
+
+
+        [Fact]
+        public void Part2_WithSecondSampleInput_ShouldReturn19208()
+        {
+            string sampleInput = @"28
+                33
+                18
+                42
+                31
+                14
+                46
+                20
+                48
+                47
+                24
+                23
+                49
+                45
+                19
+                38
+                39
+                11
+                1
+                32
+                25
+                35
+                8
+                17
+                7
+                9
+                4
+                2
+                34
+                10
+                3";
+            string[] input = new List<string>(
+                sampleInput.Split(Environment.NewLine,
+                                    StringSplitOptions.TrimEntries |
+                                    StringSplitOptions.RemoveEmptyEntries
+                                    )
+                )
+                .ToArray();
+            List<int> joltageData = new List<int>(Array.ConvertAll(input, s => int.Parse(s)));
+            joltageData.Add(0);
+            joltageData.Add(joltageData.Max() + 3);
+
+            AdapterChain adapters = new AdapterChain(joltageData);
+            long total = adapters.CountCombinations();
+
+            Assert.Equal(19208, total);
         }
 
         [Fact]
         public void GraphTopSort_WithVerySmallInput_ShouldReturnReverseGraph()
         {
-            Graph graph = new Graph();
+            Graph<int> graph = new Graph<int>();
             graph.AddNodes(new List<int> { 1, 3, 6, 9 });
             graph.AddEdge(graph.Nodes[0], graph.Nodes[1]);
             graph.AddEdge(graph.Nodes[1], graph.Nodes[2]);
             graph.AddEdge(graph.Nodes[2], graph.Nodes[3]);
-            int numPaths = graph.GetNumPaths();
+            long numPaths = graph.GetNumPaths();
 
             Assert.Equal(1, numPaths);
         }
@@ -140,13 +192,13 @@ namespace tests
         [Fact]
         public void TestName()
         {
-            Graph graph = new Graph();
+            Graph<int> graph = new Graph<int>();
             graph.AddNodes(new List<int> { 1, 3, 6, 9 });
             graph.AddEdge(graph.Nodes[0], graph.Nodes[1]);
             graph.AddEdge(graph.Nodes[0], graph.Nodes[2]);
             graph.AddEdge(graph.Nodes[1], graph.Nodes[2]);
             graph.AddEdge(graph.Nodes[2], graph.Nodes[3]);
-            int numPaths = graph.GetNumPaths();
+            long numPaths = graph.GetNumPaths();
 
             Assert.Equal(2, numPaths);
         }
