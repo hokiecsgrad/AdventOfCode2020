@@ -22,7 +22,7 @@ namespace AdventOfCode.Day10
         {
             List<int> joltageData = new List<int>(Array.ConvertAll(data, s => int.Parse(s)));
             joltageData.Add(0);
-            joltageData.Add( joltageData.Max() + 3 );
+            joltageData.Add(joltageData.Max() + 3);
 
             AdapterChain adapters = new AdapterChain(joltageData);
             (int countOf1Diffs, int countOf3Diffs) = adapters.GetJoltageDiffs();
@@ -34,6 +34,14 @@ namespace AdventOfCode.Day10
 
         public static void Part2(string[] data)
         {
+            List<int> joltageData = new List<int>(Array.ConvertAll(data, s => int.Parse(s)));
+            joltageData.Add(0);
+            joltageData.Add(joltageData.Max() + 3);
+
+            AdapterChain adapters = new AdapterChain(joltageData);
+            int total = adapters.CountCombinations();
+
+            Console.WriteLine($"The number of combinations available is: {total}.");
         }
     }
 }
