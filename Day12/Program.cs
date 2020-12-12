@@ -18,6 +18,18 @@ namespace AdventOfCode.Day12
 
         public static void Part1(string[] data)
         {
+            Ship ship = new Ship();
+            for (int i = 0; i < data.Length; i++)
+            {
+                char instruction = data[i][0];
+                int value = int.Parse(data[i].Substring(1, data[i].Length - 1));
+                if (instruction == 'R' || instruction == 'L')
+                    ship.Turn(instruction, value);
+                else
+                    ship.Move(instruction, value);
+            }
+            int manhattanDist = Math.Abs(ship.Location.X) + Math.Abs(ship.Location.Y);
+            Console.WriteLine($"The Manhattan Distance for the ship is: {manhattanDist}.");
         }
 
         public static void Part2(string[] data)
