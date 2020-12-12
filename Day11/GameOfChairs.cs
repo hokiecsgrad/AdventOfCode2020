@@ -9,15 +9,18 @@ namespace AdventOfCode.Day11
         private const char EmptySeat = 'L';
         private const char OccupiedSeat = '#';
 
+        public RuleSet Rules { get; private set; }
+
         public char[,] SeatMap { get; private set; }
         public char[,] CurrentMap { get; private set; }
-        public delegate int CountingFunction(int row, int col);
 
-        public GameOfChairs(char[,] seatMap)
+        public GameOfChairs(char[,] seatMap, RuleSet rules)
         {
             SeatMap = seatMap;
             CurrentMap = new char[seatMap.GetLength(0), seatMap.GetLength(1)];
             Array.Copy(seatMap, 0, CurrentMap, 0, seatMap.Length);
+
+            Rules = rules;
         }
 
         public int CountAllOccupiedSeats()
@@ -30,7 +33,7 @@ namespace AdventOfCode.Day11
             return occupiedChairs;
         }
 
-        public void RunRound(CountingFunction count)
+        public void RunRound()
         {
             char[,] newMap = new char[SeatMap.GetLength(0), SeatMap.GetLength(1)];
 
@@ -40,8 +43,14 @@ namespace AdventOfCode.Day11
                 {
                     char newState = CurrentMap[i, j] switch
                     {
-                        EmptySeat => count(i, j) == 0 ? OccupiedSeat : EmptySeat,
-                        OccupiedSeat => count(i, j) < 4 ? OccupiedSeat : EmptySeat,
+                        EmptySeat
+                            =>
+                                Rules.GetNumOccupiedSeats(CurrentMap, i, j) == 0
+                                ? OccupiedSeat : EmptySeat,
+                        OccupiedSeat
+                            =>
+                                Rules.GetNumOccupiedSeats(CurrentMap, i, j) < Rules.GetOccupiedThreshold()
+                                ? OccupiedSeat : EmptySeat,
                         _ => CurrentMap[i, j]
                     };
 
@@ -50,22 +59,6 @@ namespace AdventOfCode.Day11
             }
 
             Array.Copy(newMap, 0, CurrentMap, 0, newMap.Length);
-        }
-
-        public int CountAdjacentOccupiedSeats(int row, int col)
-        {
-            int numOccupiedSeats = 0;
-            for (int i = -1; i <= 1; i++)
-                for (int j = -1; j <= 1; j++)
-                    if (
-                            (row + i >= 0 && col + j >= 0) &&
-                            (row + i < SeatMap.GetLength(0) && col + j < SeatMap.GetLength(1)) &&
-                            !(i == 0 && j == 0) &&
-                            CurrentMap[row + i, col + j] == OccupiedSeat
-                            )
-                        numOccupiedSeats++;
-
-            return numOccupiedSeats;
         }
     }
 }
