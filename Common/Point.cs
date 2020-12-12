@@ -1,4 +1,4 @@
-namespace AdventOfCode.Day3
+namespace AdventOfCode.Common
 {
     public struct Point
     {
