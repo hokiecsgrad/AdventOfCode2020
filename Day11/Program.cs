@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AdventOfCode.Common;
 
 namespace AdventOfCode.Day11
@@ -18,7 +20,27 @@ namespace AdventOfCode.Day11
 
         public static void Part1(string[] data)
         {
+            char[,] seatMap = new char[data.Length, data[0].Length];
+            for (int i = 0; i < data.Length; i++)
+                for (int j = 0; j < data[0].Length; j++)
+                    seatMap[i, j] = data[i][j];
+
+            GameOfChairs chairs = new GameOfChairs(seatMap);
+            char[,] lastMap = new char[seatMap.GetLength(0), seatMap.GetLength(1)];
+            do
+            {
+                Array.Copy(chairs.CurrentMap, 0, lastMap, 0, chairs.CurrentMap.Length);
+                chairs.RunRound(chairs.CountAdjacentOccupiedSeats);
+            } while (!AreArraysTheSame(lastMap, chairs.CurrentMap));
+
+            int total = chairs.CountAllOccupiedSeats();
+            Console.WriteLine($"After stabilization, total occupied chairs are: {total}.");
         }
+
+        private static bool AreArraysTheSame(char[,] source, char[,] dest)
+            => source.Rank == dest.Rank &&
+                Enumerable.Range(0, source.Rank).All(dimension => source.GetLength(dimension) == dest.GetLength(dimension)) &&
+                source.Cast<char>().SequenceEqual(dest.Cast<char>());
 
         public static void Part2(string[] data)
         {
