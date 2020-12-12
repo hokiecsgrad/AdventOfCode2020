@@ -5,6 +5,10 @@ namespace AdventOfCode.Day11
 {
     public class GameOfChairs
     {
+        private const char Floor = '.';
+        private const char EmptySeat = 'L';
+        private const char OccupiedSeat = '#';
+
         public char[,] SeatMap { get; private set; }
         public char[,] CurrentMap { get; private set; }
         public delegate int CountingFunction(int row, int col);
@@ -21,7 +25,7 @@ namespace AdventOfCode.Day11
             int occupiedChairs = 0;
             for (int i = 0; i < SeatMap.GetLength(0); i++)
                 for (int j = 0; j < SeatMap.GetLength(1); j++)
-                    if (CurrentMap[i, j] == '#')
+                    if (CurrentMap[i, j] == OccupiedSeat)
                         occupiedChairs++;
             return occupiedChairs;
         }
@@ -36,8 +40,8 @@ namespace AdventOfCode.Day11
                 {
                     char newState = CurrentMap[i, j] switch
                     {
-                        'L' => count(i, j) == 0 ? '#' : 'L',
-                        '#' => count(i, j) < 4 ? '#' : 'L',
+                        EmptySeat => count(i, j) == 0 ? OccupiedSeat : EmptySeat,
+                        OccupiedSeat => count(i, j) < 4 ? OccupiedSeat : EmptySeat,
                         _ => CurrentMap[i, j]
                     };
 
@@ -57,7 +61,7 @@ namespace AdventOfCode.Day11
                             (row + i >= 0 && col + j >= 0) &&
                             (row + i < SeatMap.GetLength(0) && col + j < SeatMap.GetLength(1)) &&
                             !(i == 0 && j == 0) &&
-                            CurrentMap[row + i, col + j] == '#'
+                            CurrentMap[row + i, col + j] == OccupiedSeat
                             )
                         numOccupiedSeats++;
 
