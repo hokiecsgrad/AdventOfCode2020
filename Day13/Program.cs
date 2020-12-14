@@ -27,14 +27,14 @@ namespace AdventOfCode.Day13
                                 .OrderBy(s => s)
                                 .ToArray();
 
-            int minWaitId = -1;
-            int minWaitTime = int.MaxValue;
+            long minWaitId = -1;
+            long minWaitTime = int.MaxValue;
             for (int i = 0; i < schedules.Length; i++)
             {
-                int busArrivalTime = 0;
-                while (busArrivalTime < earliestTime)
-                    busArrivalTime += schedules[i];
-                int waitTime = busArrivalTime - earliestTime;
+                Schedule schedule = new Schedule(schedules[i]);
+                long busArrivalTime = schedule.GetNearestDepartureTimeTo(earliestTime);
+
+                long waitTime = busArrivalTime - earliestTime;
                 if (waitTime < minWaitTime)
                 {
                     minWaitTime = waitTime;
@@ -42,12 +42,29 @@ namespace AdventOfCode.Day13
                 }
             }
 
-            int total = minWaitId * minWaitTime;
+            long total = minWaitId * minWaitTime;
             Console.WriteLine($"The {minWaitId} bus has shortest wait at {minWaitTime} minutes for a total of {total}.");
         }
 
+        // Day 13 Part 2 is the first problem that I couldn't figure out on my own.  Couldn't even
+        // figure out what to Google to help point me in the right direction.  I took this code
+        // directly from one of the C# solutions in the subreddit.
         public static void Part2(string[] data)
         {
+            int[] schedules = data[1].Split(',').ToList()
+                                .Select(s => s == "x" ? 0 : int.Parse(s))
+                                .ToArray();
+
+            Schedule schedule = new Schedule(0, schedules[0]);
+            for (int bi = 1; bi < schedules.Length; bi++)
+            {
+                if (schedules[bi] == 0) continue;
+                schedule = schedule.CombineTwoBussesIntoOne(schedule, new Schedule(bi, schedules[bi]));
+            }
+
+            long time = schedule.Offset * -1;
+
+            Console.WriteLine($"The earliest time when all bus departures match their ID is: {time}.");
         }
     }
 }
