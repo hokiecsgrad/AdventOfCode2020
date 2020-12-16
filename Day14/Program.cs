@@ -27,24 +27,21 @@ namespace AdventOfCode.Day14
             for (int i = 0; i < data.Length; i++)
             {
                 if (data[i].Substring(0, 4) == "mask")
+                {
                     mask = Parser.GetMask(data[i]);
+                }
                 else
                 {
                     (long memSlot, long value) = Parser.GetMem(data[i]);
                     BinaryNum num = new BinaryNum(value);
-                    long result = num.MemMask(mask);
-                    memory[memSlot] = result;
+                    memory[memSlot] = num.MemMask(mask);
                 }
             }
 
-            long total = 0;
-            foreach (long key in memory.Keys)
-                total += memory[key];
-
-            Console.WriteLine($"The total of the memory slots is: {total}.");
+            Console.WriteLine($"The total of the memory slots is: {memory.Sum(addr => addr.Value)}.");
         }
 
-        public static List<string> Combos = new List<string>();
+        public static List<string> AddressCombos = new List<string>();
 
         public static void Part2(string[] data)
         {
@@ -53,37 +50,34 @@ namespace AdventOfCode.Day14
             for (int i = 0; i < data.Length; i++)
             {
                 if (data[i].Substring(0, 4) == "mask")
-                    mask = data[i].Split('=', StringSplitOptions.TrimEntries)[1];
+                {
+                    mask = Parser.GetMask(data[i]);
+                }
                 else
                 {
-                    long memSlot = long.Parse(new Regex("^mem\\[([\\d]+)\\] ").Match(data[i]).Groups[1].ToString());
-                    long value = long.Parse(data[i].Split('=', StringSplitOptions.TrimEntries)[1]);
+                    (long memSlot, long value) = Parser.GetMem(data[i]);
 
                     BinaryNum addr = new BinaryNum(memSlot);
                     string currMask = addr.AddrMask(mask);
 
-                    Combos = new List<string>();
+                    AddressCombos = new List<string>();
                     GetAddrCombos(
                         currMask.ToCharArray(),
                         Array.IndexOf(currMask.ToCharArray(), 'X')
                         );
 
-                    foreach (var address in Combos)
+                    foreach (var address in AddressCombos)
                         memory[Convert.ToInt64(address, 2)] = value;
                 }
             }
 
-            long total = 0;
-            foreach (long key in memory.Keys)
-                total += memory[key];
-
-            Console.WriteLine($"The total of the memory slots is: {total}.");
+            Console.WriteLine($"The total of the memory slots is: {memory.Sum(addr => addr.Value)}.");
         }
 
         private static void GetAddrCombos(char[] addrMask, int currIndex)
         {
             if (!addrMask.Contains('X'))
-                Combos.Add(new string(addrMask));
+                AddressCombos.Add(new string(addrMask));
             else
             {
                 int nextPos = Array.IndexOf(addrMask, 'X', currIndex + 1);
