@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AdventOfCode.Common;
 
 namespace AdventOfCode.Day15
@@ -18,10 +20,20 @@ namespace AdventOfCode.Day15
 
         public static void Part1(string[] data)
         {
+            List<long> numbers = data.Select(long.Parse).ToList();
+            MemoryGame game = new MemoryGame(numbers);
+            long total = game.Play(2020);
+
+            Console.WriteLine($"The 2020th number is: {total}.");
         }
 
         public static void Part2(string[] data)
         {
+            List<long> numbers = data.Select(long.Parse).ToList();
+            MemoryGame game = new MemoryGame(numbers);
+            long total = game.Play(30_000_000);
+
+            Console.WriteLine($"The 30,000,000th number is: {total}.");
         }
     }
 }
