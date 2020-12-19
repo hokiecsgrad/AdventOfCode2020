@@ -7,7 +7,7 @@ namespace AdventOfCode.Day16
     {
         public List<int> Numbers { get; init; } = new();
 
-        public int IsValid(RulesParser rules)
+        public (bool, int) IsValid(RulesParser rules)
         {
             foreach (int num in Numbers)
             {
@@ -19,9 +19,24 @@ namespace AdventOfCode.Day16
                         matchAny = true;
                 }
                 if (!matchAny)
-                    return num;
+                    return (false, num);
             }
-            return 0;
+            return (true, 0);
+        }
+
+        public HashSet<string> GetMatchedRules(int position, RulesParser rules)
+        {
+            HashSet<string> matched = new();
+            int num = Numbers[position];
+            foreach (Rule rule in rules.Rules)
+            {
+                if (num.IsWithin(rule.Lower.Min, rule.Lower.Max) ||
+                    num.IsWithin(rule.Upper.Min, rule.Upper.Max))
+                {
+                    matched.Add(rule.Name);
+                }
+            }
+            return matched;
         }
     }
 

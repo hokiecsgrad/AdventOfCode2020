@@ -25,31 +25,23 @@ namespace tests
                 40,4,50
                 55,2,20
                 38,6,12";
-            string[] input = sampleInput.Split(Environment.NewLine,
+            string[] data = sampleInput.Split(Environment.NewLine,
                             StringSplitOptions.TrimEntries |
                             StringSplitOptions.RemoveEmptyEntries
                             );
 
             RulesParser rules = new();
-            int ruleIndex = 0;
-            do
-            {
-                rules.AddRule(input[ruleIndex]);
-            } while (input[ruleIndex++] != "your ticket:");
-
-            while (input[ruleIndex++] != "nearby tickets:") ;
-
-            TicketParser tickets = new();
-            do
-            {
-                tickets.AddTicket(input[ruleIndex]);
-            } while (++ruleIndex < input.Length);
+            TicketParser nearbyTickets = new();
+            LoadRules(data, rules);
+            Ticket myTicket = GetMyTicket(data);
+            LoadNearbyTickets(data, nearbyTickets);
 
             int total = 0;
-            foreach (Ticket ticket in tickets.Tickets)
+            foreach (Ticket ticket in nearbyTickets.Tickets)
             {
-                int invalidNumber = ticket.IsValid(rules);
-                total += invalidNumber;
+                (bool valid, int num) = ticket.IsValid(rules);
+                if (!valid)
+                    total += num;
             }
 
             Assert.Equal(71, total);
@@ -75,31 +67,84 @@ namespace tests
                             );
 
             RulesParser rules = new();
+            TicketParser nearbyTickets = new();
+            LoadRules(data, rules);
+            Ticket myTicket = GetMyTicket(data);
+            LoadNearbyTickets(data, nearbyTickets);
+
+            List<Ticket> validTickets = new();
+            foreach (Ticket ticket in nearbyTickets.Tickets)
+            {
+                (bool valid, int num) = ticket.IsValid(rules);
+                if (valid)
+                    validTickets.Add(ticket);
+            }
+
+            Dictionary<int, HashSet<string>> ruleMatches = new Dictionary<int, HashSet<string>>();
+            for (int i = 0; i < validTickets[0].Numbers.Count; i++)
+            {
+                HashSet<string> possibleRules = rules.Rules.Select(r => r.Name).ToHashSet();
+                foreach (Ticket validTicket in validTickets)
+                {
+                    HashSet<string> matchedRules = new();
+                    matchedRules = validTicket.GetMatchedRules(i, rules);
+                    possibleRules = possibleRules.Intersect(matchedRules).ToHashSet();
+                }
+                ruleMatches[i] = possibleRules;
+            }
+
+            var sortedMatches = ruleMatches.ToList();
+            sortedMatches.Sort((a, b) => a.Value.Count.CompareTo(b.Value.Count));
+            for (int i = 0; i < sortedMatches.Count; i++)
+            {
+                for (int j = i + 1; j < sortedMatches.Count; j++)
+                {
+                    sortedMatches[j].Value.ExceptWith(sortedMatches[i].Value);
+                }
+            }
+
+            Assert.Single(sortedMatches[0].Value);
+            Assert.Contains("row", sortedMatches[0].Value);
+            Assert.Single(sortedMatches[1].Value);
+            Assert.Contains("class", sortedMatches[1].Value);
+            Assert.Single(sortedMatches[2].Value);
+            Assert.Contains("seat", sortedMatches[2].Value);
+        }
+
+        private void LoadRules(string[] data, RulesParser rules)
+        {
             int ruleIndex = 0;
             do
             {
                 rules.AddRule(data[ruleIndex]);
             } while (data[ruleIndex++] != "your ticket:");
+        }
 
+        private Ticket GetMyTicket(string[] data)
+        {
+            int dataIndex = GetDataIndexOfSection(data, "your ticket:");
             Ticket myTicket = new Ticket
             {
-                Numbers = new List<int>(Array.ConvertAll(data[ruleIndex].Split(','), int.Parse))
+                Numbers = new List<int>(Array.ConvertAll(data[dataIndex].Split(','), int.Parse))
             };
+            return myTicket;
+        }
 
-            while (data[ruleIndex++] != "nearby tickets:") ;
-
-            TicketParser nearbyTickets = new();
+        private void LoadNearbyTickets(string[] data, TicketParser tickets)
+        {
+            int dataIndex = GetDataIndexOfSection(data, "nearby tickets:");
             do
             {
-                nearbyTickets.AddTicket(data[ruleIndex]);
-            } while (++ruleIndex < data.Length);
-
-            List<Ticket> validTickets = new();
-            foreach (Ticket ticket in nearbyTickets.Tickets)
-            {
-                if (ticket.IsValid(rules) == 0)
-                    validTickets.Add(ticket);
-            }
+                tickets.AddTicket(data[dataIndex]);
+            } while (++dataIndex < data.Length);
         }
+
+        private int GetDataIndexOfSection(string[] data, string section)
+        {
+            int index = 0;
+            while (data[index++] != section) ;
+            return index;
+        }
+
     }
 }
