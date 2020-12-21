@@ -157,5 +157,20 @@ namespace tests
             };
             Assert.Equal(expected, board.BoardState);
         }
+
+        [Fact]
+        public void HyperCube_WithJustCtor_ShouldSucceeed()
+        {
+            string strBoard = ".#...####";
+            HyperCube board = new HyperCube(strBoard);
+        }
+
+        [Fact]
+        public void HyperCubeGrowBoard_WithSampleInput_ShouldSucceeed()
+        {
+            string strBoard = ".#...####";
+            HyperCube board = new HyperCube(strBoard);
+            board.GrowBoard();
+        }
     }
 }
