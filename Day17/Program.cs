@@ -18,6 +18,11 @@ namespace AdventOfCode.Day17
 
         public static void Part1(string[] data)
         {
+            string input = string.Join("", data);
+            Cube board = new Cube(input);
+            for (int i = 0; i < 6; i++)
+                board.Tick();
+            Console.WriteLine($"After six cylce, the number of active cells is: {board.CountAllActive()}.");
         }
 
         public static void Part2(string[] data)
