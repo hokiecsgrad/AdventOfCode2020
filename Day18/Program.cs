@@ -18,10 +18,26 @@ namespace AdventOfCode.Day18
 
         public static void Part1(string[] data)
         {
+            long total = 0;
+            for (int i = 0; i < data.Length; i++)
+            {
+                ExpressionParser expression = new ExpressionParser(data[i]);
+                expression.Parse();
+                total += expression.Evaluate();
+            }
+            Console.WriteLine($"The total of all the expressions is: {total}.");
         }
 
         public static void Part2(string[] data)
         {
+            long total = 0;
+            for (int i = 0; i < data.Length; i++)
+            {
+                ExpressionParser expression = new ExpressionParser(data[i]);
+                expression.ParseDifferentPrecedence();
+                total += expression.Evaluate();
+            }
+            Console.WriteLine($"The total of all the expressions is: {total}.");
         }
     }
 }
