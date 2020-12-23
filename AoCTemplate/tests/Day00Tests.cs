@@ -13,6 +13,6 @@ namespace tests
         [Fact]
         public void Part1_WithSampleInput_ShouldReturn()
         {
-	}
+        }
     }
 }
