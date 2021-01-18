@@ -1,9 +1,26 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AdventOfCode.Day20
 {
-    public class Tile
+    public enum Side
+    {
+        Top,
+        Left,
+        Right,
+        Bottom
+    }
+
+    public enum Orientation
+    {
+        Given,
+        Flipped,
+        Rotated,
+        FlippedAndRotated
+    }
+
+    public class Tile : IEquatable<Tile>
     {
         public int Id { get; set; } = 0;
         public string[] Pattern { get; set; } = new string[10];
@@ -42,6 +59,50 @@ namespace AdventOfCode.Day20
                 tileData[i+1] = rotated;
             }
             return new Tile(tileData);
+        }
+
+        public bool NeighborOf(Tile tile)
+        {
+            return Id != tile.Id && SharedEdges(tile).Any();
+        }
+
+        private HashSet<string> SharedEdges(Tile tile)
+        {
+            return GetAllEdges().Intersect(tile.GetAllEdges()).ToHashSet();
+        }
+
+        public HashSet<string> GetAllEdges()
+        {
+            HashSet<string> edges = new();
+            foreach (Side s in (Side[])Enum.GetValues(typeof(Side)))
+            {
+                string side = GetSide(s);
+                char[] charArray = side.ToCharArray();
+                Array.Reverse(charArray);
+                string reversed = new string(charArray);
+
+                edges.Add(side);
+                edges.Add(reversed);
+            }
+            return edges;
+        }
+
+        public string GetSide(Side side)
+        {
+            string value = side switch 
+            {
+                Side.Top    => Pattern[0],
+                Side.Bottom => Pattern[Pattern.Length - 1],
+                Side.Left   => string.Join("", Pattern.Select(s => s[0]).ToArray()),
+                Side.Right  => string.Join("", Pattern.Select(s => s[s.Length - 1]).ToArray()),
+                _           => throw new ArgumentException("Invalid side requested!")
+            };
+            return value;
+        }
+
+        public bool Equals(Tile other)
+        {
+            return Id == other.Id;
         }
     }
 }
